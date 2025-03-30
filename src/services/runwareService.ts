@@ -1,0 +1,99 @@
+
+import { toast } from "sonner";
+
+export interface GenerateImageParams {
+  positivePrompt: string;
+  model?: string;
+  numberResults?: number;
+  outputFormat?: string;
+  CFGScale?: number;
+  scheduler?: string;
+  strength?: number;
+  promptWeighting?: "compel" | "sdEmbeds" | "none";
+  seed?: number | null;
+  lora?: string[];
+  width?: number;
+  height?: number;
+}
+
+export interface GeneratedImage {
+  imageURL: string;
+  positivePrompt: string;
+  seed: number;
+  NSFWContent: boolean;
+}
+
+export class RunwareService {
+  private apiKey: string;
+
+  constructor(apiKey: string) {
+    this.apiKey = apiKey;
+  }
+
+  async generateImage(params: GenerateImageParams): Promise<GeneratedImage> {
+    try {
+      const taskUUID = crypto.randomUUID();
+      
+      const requestData = [{
+        taskType: "authentication",
+        apiKey: this.apiKey
+      },
+      {
+        taskType: "imageInference",
+        taskUUID,
+        model: params.model || "runware:100@1",
+        width: params.width || 1024,
+        height: params.height || 1024,
+        numberResults: params.numberResults || 1,
+        outputFormat: params.outputFormat || "WEBP",
+        steps: 4,
+        CFGScale: params.CFGScale || 1,
+        scheduler: params.scheduler || "FlowMatchEulerDiscreteScheduler",
+        strength: params.strength || 0.8,
+        lora: params.lora || [],
+        positivePrompt: params.positivePrompt,
+      }];
+
+      if (!params.seed) {
+        delete requestData[1].seed;
+      }
+
+      console.log("Sending image generation request:", requestData);
+      
+      const response = await fetch("https://api.runware.ai/v1", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to generate image");
+      }
+      
+      const data = await response.json();
+      
+      if (data.errors) {
+        throw new Error(data.errors[0].message || "Failed to generate image");
+      }
+      
+      const imageData = data.data.find((item: any) => item.taskType === "imageInference");
+      
+      if (!imageData) {
+        throw new Error("No image data returned");
+      }
+      
+      return {
+        imageURL: imageData.imageURL,
+        positivePrompt: imageData.positivePrompt,
+        seed: imageData.seed,
+        NSFWContent: imageData.NSFWContent || false
+      };
+    } catch (error) {
+      console.error("Error generating image:", error);
+      throw error;
+    }
+  }
+}
