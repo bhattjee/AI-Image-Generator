@@ -54,8 +54,12 @@ export class RunwareService {
         positivePrompt: params.positivePrompt,
       }];
 
-      if (!params.seed) {
-        delete requestData[1].seed;
+      // Only add seed if it's provided
+      if (params.seed) {
+        requestData[1] = {
+          ...requestData[1],
+          seed: params.seed
+        };
       }
 
       console.log("Sending image generation request:", requestData);
