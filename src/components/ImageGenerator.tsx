@@ -55,6 +55,21 @@ const ImageGenerator = ({ apiKey }: ImageGeneratorProps) => {
   const [generatedImage, setGeneratedImage] = useState<GeneratedImage | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeTab, setActiveTab] = useState("editor");
+  const [charCount, setCharCount] = useState(DEFAULT_PROMPT.length);
+  const MAX_CHARS = 10000; // Increased from 3000 to 10000
+
+  const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newText = e.target.value;
+    setCharCount(newText.length);
+    
+    if (newText.length <= MAX_CHARS) {
+      setPrompt(newText);
+    } else {
+      // If exceeds limit, truncate and show toast
+      setPrompt(newText.slice(0, MAX_CHARS));
+      toast.warning(`Prompt exceeds maximum length of ${MAX_CHARS} characters`);
+    }
+  };
 
   const handleCopyPrompt = () => {
     navigator.clipboard.writeText(prompt);
@@ -139,11 +154,14 @@ const ImageGenerator = ({ apiKey }: ImageGeneratorProps) => {
               </div>
               <Textarea
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
+                onChange={handlePromptChange}
                 placeholder="Describe your Vincentian scene..."
-                className="min-h-[300px] md:min-h-[500px] mb-4 text-sm"
+                className="min-h-[300px] md:min-h-[500px] mb-2 text-sm"
               />
-              <div className="flex justify-end">
+              <div className="flex justify-between items-center mb-4">
+                <div className="text-xs text-muted-foreground">
+                  {charCount}/{MAX_CHARS} characters
+                </div>
                 <Button 
                   onClick={handleGenerateImage} 
                   disabled={isGenerating}
