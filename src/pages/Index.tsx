@@ -2,24 +2,14 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import ImageGenerator from "@/components/ImageGenerator";
-import ApiKeyInput from "@/components/settings/ApiKeyInput";
-import { Palette, Sun, Moon, Settings } from "lucide-react";
+import { Palette, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const Index = () => {
-  const [apiKey, setApiKey] = useState<string>("");
-  const [showSettings, setShowSettings] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Load API key from localStorage on initial render
+  // Check preferred color scheme on initial render
   useEffect(() => {
-    const savedApiKey = localStorage.getItem("runware_api_key");
-    if (savedApiKey) {
-      setApiKey(savedApiKey);
-    }
-    
-    // Check preferred color scheme
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     setIsDarkMode(prefersDark);
     
@@ -27,13 +17,6 @@ const Index = () => {
       document.documentElement.classList.add('dark');
     }
   }, []);
-
-  // Save API key to localStorage when it changes
-  useEffect(() => {
-    if (apiKey) {
-      localStorage.setItem("runware_api_key", apiKey);
-    }
-  }, [apiKey]);
   
   // Toggle dark mode
   const toggleDarkMode = () => {
@@ -69,20 +52,6 @@ const Index = () => {
                 <Moon className="h-5 w-5 text-blue-800" />
               )}
             </Button>
-            <Dialog open={showSettings} onOpenChange={setShowSettings}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Settings className="h-4 w-4" />
-                  <span className="sr-only">Settings</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>API Settings</DialogTitle>
-                </DialogHeader>
-                <ApiKeyInput apiKey={apiKey} setApiKey={setApiKey} />
-              </DialogContent>
-            </Dialog>
           </div>
         </div>
         
@@ -91,7 +60,7 @@ const Index = () => {
           capturing the essence of friendship with swirling brushstrokes and vibrant colors.
         </p>
 
-        <ImageGenerator apiKey={apiKey} />
+        <ImageGenerator />
 
         <footer className="mt-12 text-center text-sm text-muted-foreground">
           <p>

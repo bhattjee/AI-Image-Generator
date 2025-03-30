@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +7,7 @@ import { RunwareService, GeneratedImage } from "@/services/runwareService";
 import { toast } from "sonner";
 import { Loader2, Image as ImageIcon, Copy, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getApiKey, isApiKeyConfigured } from "@/services/apiKeyService";
 
 const DEFAULT_PROMPT = `Background elements:
 
@@ -46,17 +46,13 @@ Create a sense of depth through brushstroke direction following the contours of 
 
 Apply Van Gogh's characteristic techniques throughout with thick impasto, swirling patterns, complementary colors, and emotional intensity that transforms this casual group photo into a profound artistic statement about friendship and youth`;
 
-interface ImageGeneratorProps {
-  apiKey: string;
-}
-
-const ImageGenerator = ({ apiKey }: ImageGeneratorProps) => {
+const ImageGenerator = () => {
   const [prompt, setPrompt] = useState(DEFAULT_PROMPT);
   const [generatedImage, setGeneratedImage] = useState<GeneratedImage | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeTab, setActiveTab] = useState("editor");
   const [charCount, setCharCount] = useState(DEFAULT_PROMPT.length);
-  const MAX_CHARS = 10000; // Increased from 3000 to 10000
+  const MAX_CHARS = 10000;
 
   const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
@@ -88,8 +84,8 @@ const ImageGenerator = ({ apiKey }: ImageGeneratorProps) => {
   };
 
   const handleGenerateImage = async () => {
-    if (!apiKey) {
-      toast.error("Please enter your Runware API key");
+    if (!isApiKeyConfigured()) {
+      toast.error("API key is not configured. Please contact the administrator.");
       return;
     }
 
@@ -102,6 +98,7 @@ const ImageGenerator = ({ apiKey }: ImageGeneratorProps) => {
     setActiveTab("result");
 
     try {
+      const apiKey = getApiKey();
       const runwareService = new RunwareService(apiKey);
       const image = await runwareService.generateImage({
         positivePrompt: prompt,
