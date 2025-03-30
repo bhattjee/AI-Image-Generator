@@ -49,7 +49,7 @@ const ApiKeyInput = ({ apiKey, setApiKey }: ApiKeyInputProps) => {
           </Popover>
         </div>
         {apiKey && (
-          <div className="flex items-center space-x-1 text-sm text-green-600">
+          <div className="flex items-center space-x-1 text-sm text-green-600 dark:text-green-400">
             <CheckIcon className="h-4 w-4" />
             <span>API Key Set</span>
           </div>

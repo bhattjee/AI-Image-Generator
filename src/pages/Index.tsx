@@ -2,21 +2,29 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import ImageGenerator from "@/components/ImageGenerator";
-import ApiKeyInput from "@/components/ApiKeyInput";
-import { Palette } from "lucide-react";
+import ApiKeyInput from "@/components/settings/ApiKeyInput";
+import { Palette, Sun, Moon, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const Index = () => {
   const [apiKey, setApiKey] = useState<string>("");
   const [showSettings, setShowSettings] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Load API key from localStorage on initial render
   useEffect(() => {
     const savedApiKey = localStorage.getItem("runware_api_key");
     if (savedApiKey) {
       setApiKey(savedApiKey);
+    }
+    
+    // Check preferred color scheme
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(prefersDark);
+    
+    if (prefersDark) {
+      document.documentElement.classList.add('dark');
     }
   }, []);
 
@@ -26,6 +34,16 @@ const Index = () => {
       localStorage.setItem("runware_api_key", apiKey);
     }
   }, [apiKey]);
+  
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    if (!isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   return (
     <div className="min-h-screen van-gogh-texture">
@@ -37,20 +55,35 @@ const Index = () => {
               Vincentian Friendship Mosaic
             </h1>
           </div>
-          <Dialog open={showSettings} onOpenChange={setShowSettings}>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Settings className="h-4 w-4" />
-                <span className="sr-only">Settings</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>API Settings</DialogTitle>
-              </DialogHeader>
-              <ApiKeyInput apiKey={apiKey} setApiKey={setApiKey} />
-            </DialogContent>
-          </Dialog>
+          <div className="flex items-center space-x-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleDarkMode}
+              className="rounded-full"
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? (
+                <Sun className="h-5 w-5 text-yellow-400" />
+              ) : (
+                <Moon className="h-5 w-5 text-blue-800" />
+              )}
+            </Button>
+            <Dialog open={showSettings} onOpenChange={setShowSettings}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <Settings className="h-4 w-4" />
+                  <span className="sr-only">Settings</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>API Settings</DialogTitle>
+                </DialogHeader>
+                <ApiKeyInput apiKey={apiKey} setApiKey={setApiKey} />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
         
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8 text-center">
