@@ -23,6 +23,31 @@ export interface GeneratedImage {
   NSFWContent: boolean;
 }
 
+// Define types for API request objects
+interface AuthenticationTask {
+  taskType: "authentication";
+  apiKey: string;
+}
+
+interface ImageInferenceTask {
+  taskType: "imageInference";
+  taskUUID: string;
+  model: string;
+  width: number;
+  height: number;
+  numberResults: number;
+  outputFormat: string;
+  steps: number;
+  CFGScale: number;
+  scheduler: string;
+  strength: number;
+  lora: string[];
+  positivePrompt: string;
+  seed?: number; // Make seed optional
+}
+
+type ApiTask = AuthenticationTask | ImageInferenceTask;
+
 export class RunwareService {
   private apiKey: string;
 
@@ -34,11 +59,14 @@ export class RunwareService {
     try {
       const taskUUID = crypto.randomUUID();
       
-      const requestData = [{
+      // Create the authentication task
+      const authTask: AuthenticationTask = {
         taskType: "authentication",
         apiKey: this.apiKey
-      },
-      {
+      };
+
+      // Create the image inference task with all required properties
+      const imageTask: ImageInferenceTask = {
         taskType: "imageInference",
         taskUUID,
         model: params.model || "runware:100@1",
@@ -52,15 +80,14 @@ export class RunwareService {
         strength: params.strength || 0.8,
         lora: params.lora || [],
         positivePrompt: params.positivePrompt,
-      }];
+      };
 
-      // Only add seed if it's provided
+      // Only add seed property if it's provided
       if (params.seed) {
-        requestData[1] = {
-          ...requestData[1],
-          seed: params.seed
-        };
+        imageTask.seed = params.seed;
       }
+
+      const requestData: [AuthenticationTask, ImageInferenceTask] = [authTask, imageTask];
 
       console.log("Sending image generation request:", requestData);
       
