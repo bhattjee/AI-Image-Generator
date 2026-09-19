@@ -146,7 +146,7 @@ Build and deploy using the included Docker configuration (if available).
 
 ## License
 
-This project is private and proprietary.
+Refer License file for more details
 
 ## Support
 
