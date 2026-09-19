@@ -1,6 +1,6 @@
 # AI Image Generator
 
-A professional web application that transforms text prompts into stunning AI-generated artwork. Built with a modern blue/black/white color scheme and glassmorphism effects for a clean, professional aesthetic.
+A professional web application that transforms text prompts into AI-generated artwork. 
 
 ## Features
 
@@ -55,13 +55,6 @@ The application will be available at `http://localhost:5173`
 ## API Configuration
 
 This application uses the Runware AI API for image generation. The API key is managed through the `apiKeyService.ts` file.
-
-**⚠️ Security Note**: 
-- The current implementation reads the API key from environment variables
-- For production deployment, implement proper API key management using:
-  - Environment variables (recommended)
-  - Backend proxy service
-  - Secure secret management system
 
 ### How to Get a Runware API Key
 
@@ -151,11 +144,6 @@ npm run build
 ### Docker
 Build and deploy using the included Docker configuration (if available).
 
-## License
-
-This project is private and proprietary.
-
-## Support
 
 For issues or questions, please contact the project maintainers.
 
