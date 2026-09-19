@@ -33,7 +33,7 @@ A professional web application that transforms text prompts into stunning AI-gen
 ```bash
 # Clone the repository
 git clone <YOUR_GIT_URL>
-cd vincentian-friendship-mosaic
+cd ai-image-generator
 
 # Install dependencies
 npm install
@@ -57,30 +57,40 @@ The application will be available at `http://localhost:5173`
 This application uses the Runware AI API for image generation. The API key is managed through the `apiKeyService.ts` file.
 
 **⚠️ Security Note**: 
-- The current implementation uses a placeholder API key (`YOUR_DEVELOPMENT_API_KEY`) in `src/services/apiKeyService.ts`
+- The current implementation reads the API key from environment variables
 - For production deployment, implement proper API key management using:
   - Environment variables (recommended)
   - Backend proxy service
   - Secure secret management system
 
-To configure the API key:
+### How to Get a Runware API Key
+
+1. **Visit the Runware Website**: Go to [https://runware.ai/](https://runware.ai/)
+2. **Sign Up**: Create a free account by clicking the "Sign Up" button
+3. **Verify Email**: Check your email and verify your account
+4. **Navigate to Dashboard**: Log in and go to your account dashboard
+5. **Get API Key**: 
+   - Look for the "API Keys" or "Settings" section
+   - Generate a new API key or copy your existing one
+   - Keep this key secure - do not share it publicly
+
+### Configure the API Key
 
 1. Create a `.env` file in the root directory:
    ```
    VITE_RUNWARE_API_KEY=your_actual_api_key_here
    ```
 
-2. Update `src/services/apiKeyService.ts` to read from environment variables:
-   ```typescript
-   export const getApiKey = (): string => {
-     return import.meta.env.VITE_RUNWARE_API_KEY || "";
-   };
-   ```
+2. Replace `your_actual_api_key_here` with the API key you obtained from Runware
+
+3. The application will automatically read this key from the environment variable
+
+**Note**: The `.env` file is already included in `.gitignore` to prevent accidental commits of sensitive data.
 
 ## Project Structure
 
 ```
-vincentian-friendship-mosaic/
+ai-image-generator/
 ├── public/                 # Static assets
 ├── src/
 │   ├── components/         # React components

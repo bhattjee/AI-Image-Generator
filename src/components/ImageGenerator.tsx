@@ -42,7 +42,7 @@ const ImageGenerator = () => {
     
     const link = document.createElement("a");
     link.href = generatedImage.imageURL;
-    link.download = `vincentian-friendship-${generatedImage.seed}.jpg`;
+    link.download = `ai-generated-${generatedImage.seed}.jpg`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
