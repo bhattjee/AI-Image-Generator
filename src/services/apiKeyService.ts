@@ -4,17 +4,18 @@
 
 const API_KEY_STORAGE_KEY = "runware_api_key";
 
-// For development purposes only - in production this should be handled by a backend
-// Hard-coded API key for demonstration purposes
-const DEVELOPMENT_API_KEY = "YOUR_DEVELOPMENT_API_KEY";
-
 export const getApiKey = (): string => {
-  // In a real app, you would fetch this from environment variables or a backend service
-  // For this demo, we're using the development key
-  return DEVELOPMENT_API_KEY;
+  // Read API key from environment variable
+  const apiKey = import.meta.env.VITE_RUNWARE_API_KEY;
+  
+  if (!apiKey) {
+    console.warn("VITE_RUNWARE_API_KEY is not configured in environment variables");
+  }
+  
+  return apiKey || "";
 };
 
 export const isApiKeyConfigured = (): boolean => {
-  // Since we're using a development key, it's always configured
-  return true;
+  const apiKey = getApiKey();
+  return apiKey && apiKey.length > 0 && apiKey !== "your_api_key_here";
 };

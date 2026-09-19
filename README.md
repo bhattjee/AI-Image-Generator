@@ -1,69 +1,154 @@
-# Welcome to your Lovable project
+# AI Image Generator
 
-## Project info
+A professional web application that transforms text prompts into stunning AI-generated artwork. Built with a modern blue/black/white color scheme and glassmorphism effects for a clean, professional aesthetic.
 
-**URL**: https://lovable.dev/projects/683d7e8d-7b9f-4c93-880f-b9a5dda57c20
+## Features
 
-## How can I edit this code?
+- **AI-Powered Image Generation**: Uses Runware AI API to generate artwork from text prompts
+- **Custom Prompt Editor**: Detailed prompt editor with character limit (3,000 characters)
+- **Real-time Preview**: View generated images with download capability
+- **Dark/Light Mode**: Toggle between dark and light themes
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Modern UI**: Built with shadcn/ui components and Tailwind CSS with glassmorphism effects
+- **Professional Theme**: Clean blue/black/white color scheme
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend Framework**: React 18.3.1 with TypeScript
+- **Build Tool**: Vite 5.4.1
+- **UI Components**: shadcn/ui (Radix UI primitives)
+- **Styling**: Tailwind CSS 3.4.11
+- **State Management**: React hooks
+- **Data Fetching**: TanStack React Query
+- **Forms**: React Hook Form with Zod validation
+- **Icons**: Lucide React
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/683d7e8d-7b9f-4c93-880f-b9a5dda57c20) and start prompting.
+## Prerequisites
 
-Changes made via Lovable will be committed automatically to this repo.
+- Node.js (v18 or higher)
+- npm, yarn, or bun
 
-**Use your preferred IDE**
+## Installation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+```bash
+# Clone the repository
 git clone <YOUR_GIT_URL>
+cd vincentian-friendship-mosaic
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Available Scripts
 
-**Use GitHub Codespaces**
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Build for production
+- `npm run build:dev` - Build for development mode
+- `npm run preview` - Preview production build locally
+- `npm run lint` - Run ESLint
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## API Configuration
 
-## What technologies are used for this project?
+This application uses the Runware AI API for image generation. The API key is managed through the `apiKeyService.ts` file.
 
-This project is built with .
+**⚠️ Security Note**: 
+- The current implementation uses a placeholder API key (`YOUR_DEVELOPMENT_API_KEY`) in `src/services/apiKeyService.ts`
+- For production deployment, implement proper API key management using:
+  - Environment variables (recommended)
+  - Backend proxy service
+  - Secure secret management system
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+To configure the API key:
 
-## How can I deploy this project?
+1. Create a `.env` file in the root directory:
+   ```
+   VITE_RUNWARE_API_KEY=your_actual_api_key_here
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/683d7e8d-7b9f-4c93-880f-b9a5dda57c20) and click on Share -> Publish.
+2. Update `src/services/apiKeyService.ts` to read from environment variables:
+   ```typescript
+   export const getApiKey = (): string => {
+     return import.meta.env.VITE_RUNWARE_API_KEY || "";
+   };
+   ```
 
-## I want to use a custom domain - is that possible?
+## Project Structure
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+```
+vincentian-friendship-mosaic/
+├── public/                 # Static assets
+├── src/
+│   ├── components/         # React components
+│   │   ├── ui/            # shadcn/ui components
+│   │   ├── settings/      # Settings components
+│   │   └── ImageGenerator.tsx  # Main image generation component
+│   ├── hooks/             # Custom React hooks
+│   ├── lib/               # Utility functions
+│   ├── pages/             # Page components
+│   ├── services/          # API services
+│   │   ├── apiKeyService.ts
+│   │   └── runwareService.ts
+│   ├── App.tsx            # Main app component
+│   └── main.tsx           # Entry point
+├── index.html
+├── package.json
+├── tailwind.config.ts
+├── tsconfig.json
+└── vite.config.ts
+```
+
+## Usage
+
+1. Open the application in your browser
+2. Enter a detailed prompt describing your desired image
+3. Click "Generate Image" to create the artwork
+4. View the generated result in the "Generated Image" tab
+5. Download the image using the download button
+
+## Customization
+
+### Styling
+- Modify `tailwind.config.ts` for theme customization
+- Update `src/index.css` for global styles
+- Component styles use Tailwind utility classes
+
+### Prompts
+- Edit the default prompt in `src/components/ImageGenerator.tsx` (DEFAULT_PROMPT constant)
+
+### Image Generation Parameters
+- Modify generation settings in `src/services/runwareService.ts`
+- Adjust model, dimensions, steps, and other parameters
+
+## Deployment
+
+### Vercel
+```bash
+npm install -g vercel
+vercel
+```
+
+### Netlify
+```bash
+npm run build
+# Deploy the dist folder to Netlify
+```
+
+### Docker
+Build and deploy using the included Docker configuration (if available).
+
+## License
+
+This project is private and proprietary.
+
+## Support
+
+For issues or questions, please contact the project maintainers.
+
+---
+
+*Create. Innovate. Inspire.*

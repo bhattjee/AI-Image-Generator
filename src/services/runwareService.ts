@@ -101,7 +101,8 @@ export class RunwareService {
       
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to generate image");
+        console.error("API Error Response:", errorData);
+        throw new Error(errorData.message || errorData.errors?.[0]?.message || "Failed to generate image");
       }
       
       const data = await response.json();
